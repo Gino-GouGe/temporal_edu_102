@@ -22,3 +22,6 @@
 
 # editor junk
 .*.swp
+
+# local test db
+*.db
