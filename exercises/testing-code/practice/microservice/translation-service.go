@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 	"unicode"
 )
 
@@ -76,7 +77,7 @@ func init() {
 // Languages currently supported are French, German, Spanish, Latvian,
 // Maori, Slovak, Turkish, and Zulu
 func translationHandler(w http.ResponseWriter, r *http.Request) {
-
+	currentTime := time.Now().Format(time.RFC3339)
 	// look up translation for the specified term in the specified language
 	langKeys, hasLangParam := r.URL.Query()["lang"]
 	if !hasLangParam {
@@ -88,6 +89,7 @@ func translationHandler(w http.ResponseWriter, r *http.Request) {
 	var _, isSupportedLangauge = translations[lang]
 	if !isSupportedLangauge {
 		msg := fmt.Sprintf("Unknown language code '%s'", lang)
+		fmt.Fprintf(os.Stdout, "'%s' at '%s'\n", msg, currentTime)
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}
@@ -107,9 +109,10 @@ func translationHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 			fmt.Fprint(w, string(translation))
 
-			fmt.Fprintf(os.Stdout, "Translated '%s' to '%s' as '%s'\n", term, lang, translation)
+			fmt.Fprintf(os.Stdout, "Translated '%s' to '%s' as '%s' at '%s'\n", term, lang, translation, currentTime)
 		} else {
-			msg := fmt.Sprintf("Unable to translate term '%s' to language '%s'", term, lang)
+			msg := fmt.Sprintf("Unable to translate term '%s' to language '%s' at '%s'", term, lang, currentTime)
+			fmt.Fprint(os.Stdout, msg)
 			http.Error(w, msg, http.StatusBadRequest)
 		}
 	} else {
