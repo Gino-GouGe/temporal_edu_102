@@ -72,9 +72,12 @@ func createPizzaOrder() *pizza.PizzaOrder {
 	}
 
 	// TODO: define a struct representing an additional pizza
-
+	p3 := pizza.Pizza{
+		Description: "Medium, with extra cheese",
+		Price:       1300,
+	}
 	// TODO: add the variable for that struct to this array
-	items := []pizza.Pizza{p1, p2}
+	items := []pizza.Pizza{p1, p2, p3}
 
 	order := pizza.PizzaOrder{
 		OrderNumber: "Z1238",
